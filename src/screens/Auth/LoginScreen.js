@@ -106,6 +106,7 @@ const mapStateToProp = state => {
     error: state.auth.error,
   };
 };
+
 const mapDispatchToProp = {
   login,
 };

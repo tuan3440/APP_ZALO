@@ -2,22 +2,22 @@ import {actionAuth} from '../constants/constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const initialState = {
-  _id: '',
+  id: '',
   phone: '',
   username: '',
   avatar: '',
   cover_image: '',
-  token: AsyncStorage.getItem('token') ? AsyncStorage.getItem('token') : "",
+  token: "",
   error: '',
 };
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionAuth.SIGNUP_SUCCESS:
-      AsyncStorage.setItem('token', action.payload.token);
+      // AsyncStorage.setItem('token', action.payload.token);
       return {
         ...state,
-        _id: action.payload.data.id,
+        id: action.payload.data.id,
         phone: action.payload.data.phonenumber,
         token: action.payload.token,
         username: action.payload.data.username,
@@ -31,10 +31,11 @@ const authReducer = (state = initialState, action) => {
         error: action.payload.message,
       };
     case actionAuth.LOGIN_SUCCESS:
-      AsyncStorage.setItem('token', action.payload.token);
+      // console.log("login success")
+      // AsyncStorage.setItem('token', action.payload.token);
       return {
         ...state,
-        _id: action.payload.data.id,
+        id: action.payload.data.id,
         phone: action.payload.data.phonenumber,
         token: action.payload.token,
         username: action.payload.data.username,

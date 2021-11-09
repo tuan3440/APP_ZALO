@@ -12,7 +12,6 @@ import MessageStackScreen from './src/screens/MessageScreen/MessageStackScreen';
 import PersonalStackScreen from './src/screens/PersonalScreen/PersonalStackScreen';
 import DiaryStackScreen from './src/screens/DiaryScreen/DiaryStackScreen';
 
-import Search from './src/components/Search';
 import HomeScreen from './src/screens/Auth/HomeScreen';
 import LoginScreen from './src/screens/Auth/LoginScreen';
 import RegisterScreen from './src/screens/Auth/RegisterScreen';
@@ -29,7 +28,7 @@ const AuthStackScreen = () => (
     />
     <AuthStack.Screen name="Login" component={LoginScreen} />
     <AuthStack.Screen name="Register" component={RegisterScreen} />
-    <AuthStack.Screen name="Zalo" component={AppZaloScreen} />
+    <AuthStack.Screen name="Zalo" component={AppZaloScreen}  options={{header: () => null}}/>
   </AuthStack.Navigator>
 );
 
@@ -38,9 +37,9 @@ const Tab = createBottomTabNavigator();
 
 const AppZaloScreen = () => {
   return (
-    <>
-      <Search />
-      <Tab.Navigator>
+      <Tab.Navigator
+       screenOptions={{ headerShown: false }}
+      >
         <Tab.Screen
           name="Message"
           component={MessageStackScreen}
@@ -78,6 +77,7 @@ const AppZaloScreen = () => {
                 color={focused ? '#318bfb' : '#ddd'}
               />
             ),
+            tabBarVisible: false
           }}
         />
         <Tab.Screen
@@ -94,7 +94,6 @@ const AppZaloScreen = () => {
           }}
         />
       </Tab.Navigator>
-    </>
   );
 }
 

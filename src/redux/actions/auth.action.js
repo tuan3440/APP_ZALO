@@ -40,7 +40,7 @@ export const login = (phonenumber, password) => async dispatch => {
     ).catch(err => 
       dispatch({
         type: actionAuth.LOGIN_FAILURE,
-        payload: err.response,
+        payload: err.response.data,
       })
     )
   } catch (error) {
@@ -54,3 +54,5 @@ export const removeError = () => async dispatch => {
     type : actionAuth.REMOVE_ERROR
   })
 }
+
+

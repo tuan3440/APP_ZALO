@@ -1,14 +1,14 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 
-const ListFriendScreen = () => {
+const ListRequestScreen = () => {
     return (
         <View>
             <Text>
-                List Friend
+                List request
             </Text>
         </View>
     )
 }
 
-export default ListFriendScreen;
+export default ListRequestScreen;

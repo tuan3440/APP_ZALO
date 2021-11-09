@@ -1,7 +1,11 @@
 export const BASE_URL = 'localhost:8000/';
 
 export const actionPost = {
-    GET_POSTS : 'GET_POSTS'
+    GET_POSTS : 'GET_POSTS',
+    CREATE_POST : 'CREATE_POST',
+    DELETE_POST : 'DELETE_POST',
+    ACTION_POST : 'ACTION_POST',
+    GET_COMMENT : 'GET_COMMENT'
 }
 
 export const actionAuth = {
@@ -9,5 +13,9 @@ export const actionAuth = {
     SIGNUP_FAILURE: 'SIGNUP_FAILURE',
     LOGIN_FAILURE: 'LOGIN_FAILURE',
     LOGIN_SUCCESS: 'LOGIN_SUCCESS',
-    REMOVE_ERROR: 'REMOVE_ERROR'
+    REMOVE_ERROR: 'REMOVE_ERROR',
+    SHOW_USER : 'SHOW_USER',
+    GET_ERROR : 'GET_ERROR'
 }
+
+export const URL_FILE = "http://192.168.122.1:8000/files/"

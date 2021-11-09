@@ -16,6 +16,13 @@ target 'zalo_app' do
 
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-async-storage/async-storage'
 
+  pod 'react-native-cameraroll', :path => '../node_modules/@react-native-community/cameraroll'
+
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+
+  pod 'RNDateFormat', :path => '../node_modules/react-native-date-format'
+
+
   target 'zalo_appTests' do
     inherit! :complete
     # Pods for testing
