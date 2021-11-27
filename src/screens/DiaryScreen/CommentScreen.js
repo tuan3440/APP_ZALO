@@ -21,13 +21,15 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import {connect} from 'react-redux';
 import Comment from '../../components/Diary/Comment';
 import api from '../../api/index';
+import {updateCountComment, likePost} from '../../redux/actions/post.action';
+import { useToast } from "react-native-toast-notifications";
+
 
 const CommentScreen = props => {
   const postid = props.route.params.postId;
-  // const postCurrent = props.posts.filter(post => post._id == postid);
-  // const post = postCurrent[0];
-  const [post, setPost] = useState({});
-  useEffect(async () => {
+  const toast = useToast();
+  const [post, setPost] = useState(null);
+  useEffect(() => {
     async function getPostCurrent(postid) {
       try {
         const res = await api.get('posts/show/' + postid, {
@@ -38,9 +40,9 @@ const CommentScreen = props => {
         console.error("post",e);
       }
     }
-    await getPostCurrent(postid);
-  }, []);
-  const showImage = post ? post.images.map((image, index) => {
+    getPostCurrent(postid);
+  }, [props.posts]);
+  const showImage = post?.images?.map?.((image, index) => {
     return (
       <Image
         source={{uri: URL_FILE + image.fileName}}
@@ -54,7 +56,7 @@ const CommentScreen = props => {
         key={index}
       />
     );
-  }) : null;
+  });
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
   useEffect(() => {
@@ -83,6 +85,9 @@ const CommentScreen = props => {
         },
       );
       setComments(comments => [...comments, res.data.data]);
+      let countComment = post.countComments + 1;
+      setPost({...post,countComments : countComment});
+      props.updateCountComment(postid, countComment);
     } catch (e) {
       console.error(e);
     }
@@ -121,12 +126,14 @@ const CommentScreen = props => {
         <View style={styles.content}>
           <Text style={{color: 'black'}}>{post.described}</Text>
         </View>
-        {/* <View style={styles.media}>{showImage}</View> */}
+        <View style={styles.media}>{showImage}</View>
         <View style={styles.action}>
           <AntDesign
             name="hearto"
             size={25}
             onPress={() => {
+              // console.log("aa", isLike)
+              // setIsLike(!isLike);
               props.likePost(props.token, post._id);
             }}
             color={post.isLike ? 'red' : 'black'}
@@ -150,15 +157,24 @@ const CommentScreen = props => {
                 setComment(comment);
               }}
             />
-            <Feather
+            <TouchableOpacity
+            onPress={() => {
+              console.log("xxx");
+              postComment(props.token, comment, post._id);
+              toast.show("Comment successfully", {
+                type: "normal",
+                placement: "top",
+                duration: 4000,
+                offset: 30,
+                animationType: "slide-in",
+              });
+              setComment('');
+            }}
+            ><Feather
               name="send"
               size={30}
               style={{marginTop: 10}}
-              onPress={() => {
-                postComment(props.token, comment, post._id);
-                setComment('');
-              }}
-            />
+            /></TouchableOpacity>
           </View>
         </View>
       </View>
@@ -206,6 +222,8 @@ const mapStateToProp = state => {
     posts: state.post.posts,
   };
 };
-const mapDispatchToProp = {};
+const mapDispatchToProp = {
+  updateCountComment, likePost
+};
 
 export default connect(mapStateToProp, mapDispatchToProp)(CommentScreen);

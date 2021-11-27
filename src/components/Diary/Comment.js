@@ -6,8 +6,7 @@ import {URL_FILE} from '../../redux/constants/constants';
 
 const Comment = (props) => {
     const comment = props.comment;
-    console.log("cm", comment);
-    const [author, setAuthor] = useState({}); 
+    const [author, setAuthor] = useState(null); 
     useEffect(() => {
         async function getAuthor() {
           try {
@@ -23,9 +22,9 @@ const Comment = (props) => {
       }, []);
     return (
         <View style={styles.container}>
-          {/* {author.avatar.fileName && <Image source={{
-              uri : URL_FILE + author.avatar.fileName
-            }} style={{width : 50, height : 50, borderRadius : 25, marginRight:15}}/> } */}
+          <Image source={{
+              uri : URL_FILE + author?.avatar?.fileName
+            }} style={{width : 40, height : 40, borderRadius : 20, marginRight:15}}/>
             <View>
                 <Text>{comment.user.username}</Text>
                 <Text>{comment.createdAt}</Text>

@@ -5,7 +5,9 @@ export const actionPost = {
     CREATE_POST : 'CREATE_POST',
     DELETE_POST : 'DELETE_POST',
     ACTION_POST : 'ACTION_POST',
-    GET_COMMENT : 'GET_COMMENT'
+    GET_COMMENT : 'GET_COMMENT',
+    UPDATE_COMMENT : 'UPDATE_COMMENT',
+    LIKE_POST : 'LIKE_POST'
 }
 
 export const actionAuth = {
