@@ -21,6 +21,7 @@ import {deletePost, likePost} from '../../redux/actions/post.action';
 
 const MainScreen = props => {
   useEffect(() => {
+    console.log("tokenxx", props.token)
     props.showUser(props.token);
   }, []);
 

@@ -14,11 +14,11 @@ const RegisterScreen = (props) => {
   const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  useEffect(() => {
-    if (props.token) {
-      props.navigation.navigate('Zalo');
-    }
-  }, [props.token]);
+  // useEffect(() => {
+  //   if (props.token) {
+  //     props.navigation.navigate('Zalo');
+  //   }
+  // }, [props.token]);
 
 
   return (

@@ -12,11 +12,11 @@ import {login} from '../../redux/actions/auth.action';
 const LoginScreen = props => {
   const [phonenumber, setPhonenumber] = useState('');
   const [password, setPassword] = useState('');
-  useEffect(() => {
-    if (props.token) {
-      props.navigation.navigate('Zalo');
-    }
-  }, [props.token]);
+  // useEffect(() => {
+  //   if (props.token) {
+  //     props.navigation.navigate('Zalo');
+  //   }
+  // }, [props.token]);
   return (
     <View style={styles.container}>
       {props.error ? (

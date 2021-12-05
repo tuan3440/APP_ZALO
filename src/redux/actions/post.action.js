@@ -90,6 +90,20 @@ export const deletePost = (token, id) => async dispatch => {
     console.log('xx', error.message);
   }
 };
+
+//hide post 
+
+export const hiddenPost = (id) => async dispatch => {
+  try {
+    dispatch({
+      type: actionPost.DELETE_POST,
+      payload: id,
+    });
+  } catch (error) {
+    console.log('xx', error.message);
+  }
+};
+
 //like post
 export const likePost = (token, postId) => async dispatch => {
   console.log('x');

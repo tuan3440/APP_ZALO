@@ -14,11 +14,11 @@ import {removeError} from '../../redux/actions/auth.action';
 import { useIsFocused } from '@react-navigation/native';
 
 const HomeScreen = (props) => {
-  useEffect(() => {
-    if (props.token) {
-      props.navigation.navigate('Zalo');
-    }
-  }, [props.token]);
+  // useEffect(() => {
+  //   if (props.token) {
+  //     props.navigation.navigate('Zalo');
+  //   }
+  // }, [props.token]);
 
   const isFocused = useIsFocused();
   useEffect(() => {

@@ -13,6 +13,7 @@ import {connect} from 'react-redux';
 import {URL_FILE} from '../../redux/constants/constants';
 import { RadioButton } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import { useToast } from "react-native-toast-notifications";
 
 const UpdateInfoScreen = props => {
   const user = props.route.params.user;
@@ -21,6 +22,27 @@ const UpdateInfoScreen = props => {
   const [gender, setGender] = useState(user?.gender);
   const [address, setAddress] = useState(user?.address);
   const [description, setDescription] = useState(user?.description);
+  const toast = useToast();
+
+  const updateInfomation = async (username, gender, address, description) => {
+    try {
+      const res = await api.post('users/edit/',{
+        username, gender, address, description
+      }, {
+        headers: {authorization: `Bearer ${props.token}`},
+      });
+       props.navigation.navigate("Personal Setting");
+       toast.show("Update infomation successfully", {
+                      type: "normal",
+                      placement: "top",
+                      duration: 4000,
+                      offset: 30,
+                      animationType: "slide-in",
+                    });
+    } catch (e) {
+      console.error('post', e);
+    }
+  }
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -78,7 +100,7 @@ const UpdateInfoScreen = props => {
           </View>
         </View>
         <View>
-          <Button title="Update" />
+          <Button title="Update" onPress={() => updateInfomation(username, gender, address, description)}/>
         </View>
       </ScrollView>
     </View>

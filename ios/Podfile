@@ -23,6 +23,8 @@ target 'zalo_app' do
   pod 'RNDateFormat', :path => '../node_modules/react-native-date-format'
 
 
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+
   target 'zalo_appTests' do
     inherit! :complete
     # Pods for testing

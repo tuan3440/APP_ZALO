@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState, useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -16,8 +16,9 @@ import DiaryStackScreen from './src/screens/DiaryScreen/DiaryStackScreen';
 import HomeScreen from './src/screens/Auth/HomeScreen';
 import LoginScreen from './src/screens/Auth/LoginScreen';
 import RegisterScreen from './src/screens/Auth/RegisterScreen';
-
-const Stack = createNativeStackNavigator();
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {connect} from 'react-redux';
+import {changeToken} from './src/redux/actions/auth.action';
 
 const AuthStack = createNativeStackNavigator();
 const AuthStackScreen = () => (
@@ -29,12 +30,22 @@ const AuthStackScreen = () => (
     />
     <AuthStack.Screen name="Login" component={LoginScreen} />
     <AuthStack.Screen name="Register" component={RegisterScreen} />
-    <AuthStack.Screen
+    {/* <AuthStack.Screen
+      name="Zalo"
+      component={AppZaloScreen}
+      options={{header: () => null}}
+    /> */}
+  </AuthStack.Navigator>
+);
+const MainStack = createNativeStackNavigator();
+const MainStackScreen = () => (
+  <MainStack.Navigator>
+    <MainStack.Screen
       name="Zalo"
       component={AppZaloScreen}
       options={{header: () => null}}
     />
-  </AuthStack.Navigator>
+  </MainStack.Navigator>
 );
 
 const Tab = createBottomTabNavigator();
@@ -99,14 +110,45 @@ const AppZaloScreen = () => {
   );
 };
 
-export default () => {
+const A = (props) => {
+  const [isLogin, setIsLogin] = useState('');
+  useEffect(() => {
+    const getTokenStorage = async () => {
+      try {
+        const a = await AsyncStorage.getItem('token');
+        console.log("token", a);
+        props.changeToken(a);
+        setIsLogin(a);
+      } catch (e) {}
+    };
+    getTokenStorage();
+  },[props.token])
   return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <ToastProvider>
-          <AuthStackScreen />
-        </ToastProvider>
-      </NavigationContainer>
-    </Provider>
+    <NavigationContainer>
+      <ToastProvider>
+        {isLogin ? <MainStackScreen /> : <AuthStackScreen />}
+      </ToastProvider>
+    </NavigationContainer>
   );
+};
+const mapStateToProp = state => {
+  return {
+    token: state.auth.token,
+  };
+};
+const mapDispatchToProp = {
+  changeToken
+};
+const B = connect(mapStateToProp, mapDispatchToProp)(A);
+
+
+export default () => {
+  return <Provider store={store}>
+    <B />
+   {/* <NavigationContainer>
+      <ToastProvider>
+        {isLogin ? <MainStackScreen /> : <AuthStackScreen />}
+      </ToastProvider>
+    </NavigationContainer> */}
+  </Provider>;
 };

@@ -7,7 +7,8 @@ export const actionPost = {
     ACTION_POST : 'ACTION_POST',
     GET_COMMENT : 'GET_COMMENT',
     UPDATE_COMMENT : 'UPDATE_COMMENT',
-    LIKE_POST : 'LIKE_POST'
+    LIKE_POST : 'LIKE_POST',
+    HIDDEN_POST: "HIDDEN_POST"
 }
 
 export const actionAuth = {
@@ -17,7 +18,9 @@ export const actionAuth = {
     LOGIN_SUCCESS: 'LOGIN_SUCCESS',
     REMOVE_ERROR: 'REMOVE_ERROR',
     SHOW_USER : 'SHOW_USER',
-    GET_ERROR : 'GET_ERROR'
+    GET_ERROR : 'GET_ERROR',
+    CHANGE_TOKEN : "CHANGE_TOKEN",
+    LOGOUT : 'LOGOUT'
 }
 
 export const URL_FILE = "http://192.168.122.1:8000/files/"

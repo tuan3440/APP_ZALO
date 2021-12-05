@@ -55,4 +55,20 @@ export const removeError = () => async dispatch => {
   })
 }
 
+// change password
+export const changeToken = (newToken) => async dispatch => {
+  dispatch({
+    type : actionAuth.CHANGE_TOKEN,
+    payload : newToken
+  })
+}
+
+// log out
+export const logout = () => async dispatch => {
+  dispatch({
+    type : actionAuth.LOGOUT
+  })
+}
+
+
 

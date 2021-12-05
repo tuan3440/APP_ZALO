@@ -11,10 +11,38 @@ const initialState = {
   error: '',
 };
 
+
+const removeTokenStorage = async () => {
+    try {
+       const n = await AsyncStorage.removeItem("token");
+       return n;
+    } catch(e) {
+       
+    }
+}
+
+const getTokenStorage = async () => {
+  try {
+    const a = await AsyncStorage.getIem("token");
+    console.log("token", a);
+    return a;
+  } catch(e) {
+     
+  }
+}
+
+const saveTokenStorage = async (token) => {
+  try {
+     const m = await AsyncStorage.setItem("token", token);
+     return m;
+  } catch(e) {
+     
+  }
+}
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionAuth.SIGNUP_SUCCESS:
-      // AsyncStorage.setItem('token', action.payload.token);
+      saveTokenStorage(action.payload.token)
       return {
         ...state,
         id: action.payload.data.id,
@@ -31,8 +59,7 @@ const authReducer = (state = initialState, action) => {
         error: action.payload.message,
       };
     case actionAuth.LOGIN_SUCCESS:
-      // console.log("login success")
-      // AsyncStorage.setItem('token', action.payload.token);
+      saveTokenStorage(action.payload.token)
       return {
         ...state,
         id: action.payload.data.id,
@@ -51,6 +78,17 @@ const authReducer = (state = initialState, action) => {
         ...state,
        error : ""
       };
+    case actionAuth.CHANGE_TOKEN:
+      return {
+        ...state,
+        token : action.payload
+      }
+    case actionAuth.LOGOUT: 
+      removeTokenStorage();
+      return {
+        ...state,
+        token : ""
+      }
     default:
       return state;
   }

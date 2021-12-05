@@ -16,13 +16,15 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Modal from 'react-native-modal';
 import api from '../../api/index';
-import { useToast } from "react-native-toast-notifications";
+import {useToast} from 'react-native-toast-notifications';
 import {connect} from 'react-redux';
+import {hiddenPost} from '../../redux/actions/post.action';
+
 const PostSingle = props => {
   const toast = useToast();
   const {navigation} = props;
   const postid = props.post._id;
-  console.log("www", postid)
+  console.log('www', postid);
   const [isModalPost, setIsModalPost] = useState(false);
   const [isModalReport, setIsModalReport] = useState(false);
   const [isModalReportDetail, setIsModalReportDetail] = useState(false);
@@ -35,10 +37,11 @@ const PostSingle = props => {
         const res = await api.get('posts/show/' + postid, {
           headers: {authorization: `Bearer ${props.token}`},
         });
-        console.log("xax", res.data.data)
+        console.log('xax', res.data.data);
+        console.log('phoone', props.phonenumber);
         setPost(res.data.data);
       } catch (e) {
-        console.error("post",e);
+        console.error('post', e);
       }
     }
     getPostCurrent(postid);
@@ -142,34 +145,76 @@ const PostSingle = props => {
             style={styles.modalContainer}>
             <TouchableWithoutFeedback onPress={() => {}}>
               <View style={styles.modal}>
-                <Text
-                  style={{
-                    fontSize: 15,
-                    paddingVertical: 15,
-                    borderBottomWidth: 1,
-                    color: 'black',
-                  }}
-                  onPress={() => {
-                    console.log('id', post._id);
-                    props.deletePost(props.token, post._id);
-                    toast.show("Delete post successfully", {
-                      type: "normal",
-                      placement: "top",
-                      duration: 4000,
-                      offset: 30,
-                      animationType: "slide-in",
-                    });
-                  }}>
-                  Detele Post
-                </Text>
-                <Text
-                  onPress={() => {
-                    setIsModalPost(false);
-                    setIsModalReport(true);
-                  }}
-                  style={{fontSize: 15, paddingVertical: 15, color: 'black'}}>
-                  Report post
-                </Text>
+                {props.phonenumber == post?.author?.phonenumber ? (
+                  <>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        paddingVertical: 15,
+                        borderBottomWidth: 1,
+                        color: 'black',
+                      }}
+                      onPress={() => {
+                        console.log('id', post._id);
+                        props.deletePost(props.token, post._id);
+                        toast.show('Delete post successfully', {
+                          type: 'normal',
+                          placement: 'top',
+                          duration: 4000,
+                          offset: 30,
+                          animationType: 'slide-in',
+                        });
+                      }}>
+                      Edit Post
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        paddingVertical: 15,
+                        borderBottomWidth: 1,
+                        color: 'black',
+                      }}
+                      onPress={() => {
+                        console.log('id', post._id);
+                        props.deletePost(props.token, post._id);
+                        toast.show('Delete post successfully', {
+                          type: 'normal',
+                          placement: 'top',
+                          duration: 4000,
+                          offset: 30,
+                          animationType: 'slide-in',
+                        });
+                      }}>
+                      Detele Post
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    <Text
+                      onPress={() => {
+                        props.hiddenPost(post._id);
+                      }}
+                      style={{
+                        fontSize: 15,
+                        paddingVertical: 15,
+                        color: 'black',
+                      }}>
+                      Hidden post
+                    </Text>
+                    <Text
+                      onPress={() => {
+                        setIsModalPost(false);
+                        setIsModalReport(true);
+                      }}
+                      style={{
+                        fontSize: 15,
+                        paddingVertical: 15,
+                        color: 'black',
+                      }}>
+                      Report post
+                    </Text>
+                  </>
+                )}
               </View>
             </TouchableWithoutFeedback>
           </TouchableOpacity>
@@ -202,12 +247,12 @@ const PostSingle = props => {
                 <TouchableOpacity
                   onPress={() => {
                     createReport(post._id, 'Sensitive content', '');
-                    toast.show("Report post successfully", {
-                      type: "normal",
-                      placement: "top",
+                    toast.show('Report post successfully', {
+                      type: 'normal',
+                      placement: 'top',
                       duration: 4000,
                       offset: 30,
-                      animationType: "slide-in",
+                      animationType: 'slide-in',
                     });
                     setIsModalReport(false);
                   }}>
@@ -218,12 +263,12 @@ const PostSingle = props => {
                 <TouchableOpacity
                   onPress={() => {
                     createReport(post._id, 'Bother', '');
-                    toast.show("Report post successfully", {
-                      type: "normal",
-                      placement: "top",
+                    toast.show('Report post successfully', {
+                      type: 'normal',
+                      placement: 'top',
                       duration: 4000,
                       offset: 30,
-                      animationType: "slide-in",
+                      animationType: 'slide-in',
                     });
                     setIsModalReport(false);
                   }}>
@@ -234,12 +279,12 @@ const PostSingle = props => {
                 <TouchableOpacity
                   onPress={() => {
                     createReport(post._id, 'Unrelated', '');
-                    toast.show("Report post successfully", {
-                      type: "normal",
-                      placement: "top",
+                    toast.show('Report post successfully', {
+                      type: 'normal',
+                      placement: 'top',
                       duration: 4000,
                       offset: 30,
-                      animationType: "slide-in",
+                      animationType: 'slide-in',
                     });
                     setIsModalReport(false);
                   }}>
@@ -288,17 +333,20 @@ const PostSingle = props => {
                   onChangeText={detail => setDetail(detail)}
                   placeholder="Type.."
                 />
-                <Button title="Send" onPress={() => {
-                  createReport(post._id, "Other Reason", detail);
-                  toast.show("Report post successfully", {
-                    type: "normal",
-                    placement: "top",
-                    duration: 4000,
-                    offset: 30,
-                    animationType: "slide-in",
-                  });
-                  setIsModalReportDetail(false);
-                }}/>
+                <Button
+                  title="Send"
+                  onPress={() => {
+                    createReport(post._id, 'Other Reason', detail);
+                    toast.show('Report post successfully', {
+                      type: 'normal',
+                      placement: 'top',
+                      duration: 4000,
+                      offset: 30,
+                      animationType: 'slide-in',
+                    });
+                    setIsModalReportDetail(false);
+                  }}
+                />
               </View>
             </TouchableWithoutFeedback>
           </TouchableOpacity>
@@ -363,7 +411,7 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     alignItems: 'center',
     position: 'absolute',
-    bottom: 200
+    bottom: 200,
   },
 });
 
@@ -372,11 +420,12 @@ const mapStateToProp = state => {
     avatar: state.user.avatar,
     token: state.auth.token,
     id: state.auth.id,
+    phonenumber: state.auth.phone,
     posts: state.post.posts,
   };
 };
 const mapDispatchToProp = {
-  
+  hiddenPost
 };
 
 export default connect(mapStateToProp, mapDispatchToProp)(PostSingle);

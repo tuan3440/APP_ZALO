@@ -1,11 +1,22 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Image, StyleSheet, ScrollView, Button, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  Button,
+  TouchableOpacity,
+} from 'react-native';
 import api from '../../api/index';
 import {connect} from 'react-redux';
 import {URL_FILE} from '../../redux/constants/constants';
+import {useIsFocused} from '@react-navigation/native';
+import {logout} from '../../redux/actions/auth.action';
 
 const PersonalScreen = props => {
   const [user, setUser] = useState(null);
+  const isFocused = useIsFocused();
   useEffect(() => {
     async function getUserCurrent() {
       try {
@@ -18,64 +29,92 @@ const PersonalScreen = props => {
         console.error('post', e);
       }
     }
-    getUserCurrent();
-  }, []);
+    if (isFocused) {
+      getUserCurrent();
+    }
+   
+  }, [isFocused]);
+
   return (
     <View style={styles.container}>
-        <TouchableOpacity onPress={() => {
-            props.navigation.navigate("infoPersonal", {
-                user : user
-            })
+      <TouchableOpacity
+        onPress={() => {
+          props.navigation.navigate('infoPersonal', {
+            user: user,
+          });
         }}>
-        <View style={styles.profile}
-        >
-        <Image
-            style={{width: 40, height: 40, borderRadius: 20, marginHorizontal: 20}}
+        <View style={styles.profile}>
+          <Image
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: 20,
+              marginHorizontal: 20,
+            }}
             source={{
               uri: URL_FILE + user?.avatar?.fileName,
             }}
           />
           <View>
-              <Text>{user?.username}</Text>
-              <Text>View my profile</Text>
+            <Text>{user?.username}</Text>
+            <Text>View my profile</Text>
           </View>
         </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => {
-            props.navigation.navigate("Update", {
-                user : user
-            })
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          props.navigation.navigate('Update', {
+            user: user,
+          });
         }}>
         <View style={styles.option}>
-            <Text style={{marginLeft : 20, flex: 1, fontSize: 20}}>Update infomation</Text>
-            <Text style={{fontSize: 20, marginRight: 15}}>{'>'}</Text>
+          <Text style={{marginLeft: 20, flex: 1, fontSize: 20}}>
+            Update infomation
+          </Text>
+          <Text style={{fontSize: 20, marginRight: 15}}>{'>'}</Text>
         </View>
-        </TouchableOpacity>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          props.navigation.navigate('Update Password', {
+            user: user,
+          });
+        }}>
         <View style={styles.option}>
-            <Text style={{marginLeft : 20, flex: 1, fontSize: 20}}>Change password</Text>
-            <Text style={{fontSize: 20, marginRight: 15}}>{'>'}</Text>
+          <Text style={{marginLeft: 20, flex: 1, fontSize: 20}}>
+            Change password
+          </Text>
+          <Text style={{fontSize: 20, marginRight: 15}}>{'>'}</Text>
         </View>
-        <View style={styles.option}>
-            <Text style={{marginLeft : 20, flex: 1, fontSize: 20, color: 'red'}}>Log out</Text>
-        </View>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          props.logout();
+        }}>
+      <View style={styles.option}>
+        <Text style={{marginLeft: 20, flex: 1, fontSize: 20, color: 'red'}}>
+          Log out
+        </Text>
+      </View>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
- container : {},
- profile: {
-     flexDirection: 'row',
-     paddingVertical: 15,
-     borderBottomWidth: 10,
-     borderBottomColor: 'grey'
- },
- option : {
-     flexDirection: 'row',
-     paddingVertical : 20,
-     borderBottomColor : 'grey',
-     borderBottomWidth : 1
- }
+  container: {},
+  profile: {
+    flexDirection: 'row',
+    paddingVertical: 15,
+    borderBottomWidth: 10,
+    borderBottomColor: 'grey',
+  },
+  option: {
+    flexDirection: 'row',
+    paddingVertical: 20,
+    borderBottomColor: 'grey',
+    borderBottomWidth: 1,
+  },
 });
 
 const mapStateToProp = state => {
@@ -88,5 +127,7 @@ const mapStateToProp = state => {
   };
 };
 
-const mapDispatchToProp = {};
+const mapDispatchToProp = {
+  logout
+};
 export default connect(mapStateToProp, mapDispatchToProp)(PersonalScreen);
