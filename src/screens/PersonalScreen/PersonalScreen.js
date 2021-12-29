@@ -13,6 +13,7 @@ import {connect} from 'react-redux';
 import {URL_FILE} from '../../redux/constants/constants';
 import {useIsFocused} from '@react-navigation/native';
 import {logout} from '../../redux/actions/auth.action';
+import Search from '../../components/Search';
 
 const PersonalScreen = props => {
   const [user, setUser] = useState(null);
@@ -23,7 +24,6 @@ const PersonalScreen = props => {
         const res = await api.get('users/show/', {
           headers: {authorization: `Bearer ${props.token}`},
         });
-        console.log('xax', res.data.data);
         setUser(res.data.data);
       } catch (e) {
         console.error('post', e);

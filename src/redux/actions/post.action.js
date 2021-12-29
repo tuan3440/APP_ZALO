@@ -8,7 +8,6 @@ export const getListPost = token => async dispatch => {
     await api
       .get('posts/list', {headers: {authorization: `Bearer ${token}`}})
       .then(res => {
-        console.log("posts", res.data)
         dispatch({
           type: actionPost.GET_POSTS,
           payload: res.data,
@@ -27,27 +26,13 @@ export const getListPost = token => async dispatch => {
 };
 //create post
 export const createPost =
-  (token, images, videos, description) => async dispatch => {
+  (token, data) => async dispatch => {
+    console.log("xex", data);
     try {
-      const data = new FormData();
-      if (images != null) {
-        data.append('images', {
-          name: images.fileName,
-          type: images.type,
-          uri:
-            Platform.OS === 'ios'
-              ? images.uri.replace('file://', '')
-              : images.uri,
-          size: images.fileSize,
-        });
-      }
-      data.append('described', description);
-
       await api
         .post('posts/create', data, {
           headers: {
             authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
           },
         })
         .then(res => {

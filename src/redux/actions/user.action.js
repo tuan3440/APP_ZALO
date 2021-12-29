@@ -26,3 +26,4 @@ export const showUser = (token) => async dispatch => {
       console.log('xx', error.message);
     }
   };
+

@@ -12,29 +12,29 @@ import {URL_FILE} from '../../redux/constants/constants';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import api from '../../api/index';
-
+import {useNavigation} from '@react-navigation/native';
 
 const FriendSingle = props => {
   const friend = props.friend;
-  const removeFriend = async (user_id) => {
+  const navigation = useNavigation();
+
+  const createChat = async friendId => {
     try {
-      const res = await api.post('friends/set-remove/',
-      {
-        user_id : user_id
-      },
-      {
+      const res = await api.get('chats/createChat/' + friendId, {
         headers: {authorization: `Bearer ${props.token}`},
       });
-      const newList = props.lists.filter(friend => {
-        return friend._id != user_id;
-      })
-      props.update(newList);
+      let chatId = res.data.data;
+      navigation.navigate('Message', {
+        username: friend.username,
+        chatId: chatId,
+      });
     } catch (e) {
-      console.error('cm111', e.response);
+      console.error('post', e);
     }
-  }
+  };
   return (
-    <View style={styles.container}>
+    <TouchableOpacity onPress={() => createChat(friend._id)}>
+    <View style={styles.container} >
       <Image
       style={{width: 35, height: 35, borderRadius: 20, marginLeft: 20, marginRight: 20}}
       source={{
@@ -44,9 +44,10 @@ const FriendSingle = props => {
       <AntDesign name="phone" size={25}/>
       <AntDesign name="videocamera" size={25} style={{marginLeft:20}}/>
       <MaterialCommunityIcons name="account-cancel-outline" size={30} style={{marginHorizontal:20}}
-      onPress={() => removeFriend(friend._id)}
+      onPress={() => props.removeFriend(props.token, friend._id)}
       />
     </View>
+    </TouchableOpacity>
   );
 };
 

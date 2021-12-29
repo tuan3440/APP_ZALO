@@ -3,6 +3,7 @@ import {View, Text, TextInput, StyleSheet, Image} from 'react-native';
 import api from '../../api/index';
 import {connect} from 'react-redux';
 import {URL_FILE} from '../../redux/constants/constants';
+import {convertTime} from '../../redux/constants/constants';
 
 const Comment = (props) => {
     const comment = props.comment;
@@ -20,6 +21,17 @@ const Comment = (props) => {
         }
         getAuthor();
       }, []);
+
+      const showTime = (time) => {
+        if (time) {
+           let d = new Date(time);
+           let dateCurrent = new Date();
+  
+           let seconds = dateCurrent.getTime() - d.getTime();
+           let result = convertTime(seconds/1000);
+           return result;
+        }
+    }
     return (
         <View style={styles.container}>
           <Image source={{
@@ -27,7 +39,7 @@ const Comment = (props) => {
             }} style={{width : 40, height : 40, borderRadius : 20, marginRight:15}}/>
             <View>
                 <Text>{comment.user.username}</Text>
-                <Text>{comment.createdAt}</Text>
+                <Text>{showTime(comment.createdAt)}</Text>
                 <Text>{comment.content}</Text>
             </View>
         </View>

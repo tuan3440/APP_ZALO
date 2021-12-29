@@ -7,7 +7,7 @@ const initialState = {
     gender : '',
     birthday : '',
     avatar : {},
-    cover_image : {},
+    cover_image : {}
 };
 
 const userReducer = (state = initialState, action) => {

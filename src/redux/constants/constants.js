@@ -20,7 +20,42 @@ export const actionAuth = {
     SHOW_USER : 'SHOW_USER',
     GET_ERROR : 'GET_ERROR',
     CHANGE_TOKEN : "CHANGE_TOKEN",
-    LOGOUT : 'LOGOUT'
+    LOGOUT : 'LOGOUT',
+    BLOCK_INBOX : 'BLOCK_INBOX'
 }
 
-export const URL_FILE = "http://192.168.122.1:8000/files/"
+export const actionFriend = {
+    GET_LIST_FRIEND : 'GET_LIST_FRIEND',
+    GET_LIST_REQUEST : 'GET_LIST_REQUEST',
+    GET_LIST_REQUESTED : 'GET_LIST_REQUESTED',
+    REMOVE_FRIEND : 'REMOVE_FRIEND',
+    ACCEPT_REQUEST : 'ACCEPT_REQUEST',
+    REMOVE_REQUEST : 'REMOVE_REQUEST',
+    SEND_REQUEST : 'SEND_REQUEST'
+}
+
+export const URL_FILE = "http://192.168.122.1:8000/files/";
+
+export function convertTime(secs) {
+    if (secs > 604800) {
+        return "few weeks ago";
+    } else {
+        let day = Math.floor(secs/ 86400);
+        if (day >= 1) {
+            return day + ' day ago';
+        } else {
+            let hours = Math.floor(secs / (3600));
+            if (hours >= 1) {
+                return hours + " hours ago";
+            } else {
+                let minute = Math.floor(secs / (60));
+                if (minute >=1) {
+                    return minute + " minutes ago";
+                } else {
+                    return " few seconds ago";
+                }
+            }
+        }
+    }
+
+}

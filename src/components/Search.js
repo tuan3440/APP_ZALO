@@ -6,7 +6,7 @@ const Search = () => {
     return (
         <View style={styles.container}>
             <AntDesign name="search1" size={20} style={styles.icon}/>
-            <TextInput placeholder="Tìm bạn bè, tin nhắn .." style={styles.input}/>
+            <TextInput placeholder="Tìm bạn bè" style={styles.input}/>
         </View>
     )
 }

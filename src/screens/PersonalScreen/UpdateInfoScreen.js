@@ -17,7 +17,6 @@ import { useToast } from "react-native-toast-notifications";
 
 const UpdateInfoScreen = props => {
   const user = props.route.params.user;
-  console.log("user", user)
   const [username, setUsername] = useState(user?.username);
   const [gender, setGender] = useState(user?.gender);
   const [address, setAddress] = useState(user?.address);

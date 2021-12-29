@@ -14,7 +14,7 @@ const DiaryStackScreen = ({ navigation, route }) => {
     <DiaryStack.Navigator
     // screenOptions={{ headerShown: false }}
     >
-    <DiaryStack.Screen name="main" component={MainScreen} options={{headerShown: false}}/>
+    <DiaryStack.Screen name="main" component={MainScreen} />
     <DiaryStack.Screen name="CreatePost" component={CreatePostScreen} />
     <DiaryStack.Screen name="Comment" component={CommentScreen} />
   </DiaryStack.Navigator>

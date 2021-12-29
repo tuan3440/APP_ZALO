@@ -8,7 +8,7 @@ import store from './src/redux/store';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import DirectoryTabScreen from './src/screens/DirectoryScreen/DirectoryTabScreen';
+import DirectoryStackScreen from './src/screens/DirectoryScreen/DirectoryStackScreen';
 import MessageStackScreen from './src/screens/MessageScreen/MessageStackScreen';
 import PersonalStackScreen from './src/screens/PersonalScreen/PersonalStackScreen';
 import DiaryStackScreen from './src/screens/DiaryScreen/DiaryStackScreen';
@@ -19,7 +19,13 @@ import RegisterScreen from './src/screens/Auth/RegisterScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {connect} from 'react-redux';
 import {changeToken} from './src/redux/actions/auth.action';
+import { LogBox } from 'react-native';
 
+// Ignore log notification by message:
+LogBox.ignoreLogs(['Warning: ...']);
+
+// Ignore all log notifications:
+LogBox.ignoreAllLogs();
 const AuthStack = createNativeStackNavigator();
 const AuthStackScreen = () => (
   <AuthStack.Navigator>
@@ -68,7 +74,7 @@ const AppZaloScreen = () => {
       />
       <Tab.Screen
         name="Directory"
-        component={DirectoryTabScreen}
+        component={DirectoryStackScreen}
         options={{
           tabBarIcon: ({focused}) => (
             <AntDesign
@@ -111,17 +117,9 @@ const AppZaloScreen = () => {
 };
 
 const A = (props) => {
-  const [isLogin, setIsLogin] = useState('');
+  const [isLogin, setIsLogin] = useState(props.token);
   useEffect(() => {
-    const getTokenStorage = async () => {
-      try {
-        const a = await AsyncStorage.getItem('token');
-        console.log("token", a);
-        props.changeToken(a);
-        setIsLogin(a);
-      } catch (e) {}
-    };
-    getTokenStorage();
+    setIsLogin(props.token)
   },[props.token])
   return (
     <NavigationContainer>
@@ -145,10 +143,5 @@ const B = connect(mapStateToProp, mapDispatchToProp)(A);
 export default () => {
   return <Provider store={store}>
     <B />
-   {/* <NavigationContainer>
-      <ToastProvider>
-        {isLogin ? <MainStackScreen /> : <AuthStackScreen />}
-      </ToastProvider>
-    </NavigationContainer> */}
   </Provider>;
 };

@@ -22,7 +22,8 @@ import {connect} from 'react-redux';
 import Comment from '../../components/Diary/Comment';
 import api from '../../api/index';
 import {updateCountComment, likePost} from '../../redux/actions/post.action';
-import { useToast } from "react-native-toast-notifications";
+import {useToast} from 'react-native-toast-notifications';
+import {convertTime} from '../../redux/constants/constants';
 
 
 const CommentScreen = props => {
@@ -37,7 +38,7 @@ const CommentScreen = props => {
         });
         setPost(res.data.data);
       } catch (e) {
-        console.error("post",e);
+        console.error('post', e);
       }
     }
     getPostCurrent(postid);
@@ -67,7 +68,7 @@ const CommentScreen = props => {
         });
         setComments(res.data.data);
       } catch (e) {
-        console.error("cm",e);
+        console.error('cm', e);
       }
     }
     getCommentList();
@@ -86,7 +87,7 @@ const CommentScreen = props => {
       );
       setComments(comments => [...comments, res.data.data]);
       let countComment = post.countComments + 1;
-      setPost({...post,countComments : countComment});
+      setPost({...post, countComments: countComment});
       props.updateCountComment(postid, countComment);
     } catch (e) {
       console.error(e);
@@ -99,87 +100,94 @@ const CommentScreen = props => {
           return <Comment comment={comment} key={comment._id} />;
         })
       : null;
+
+  const showTime = time => {
+    if (time) {
+      let d = new Date(time);
+      let dateCurrent = new Date();
+
+      let seconds = dateCurrent.getTime() - d.getTime();
+      let result = convertTime(seconds / 1000);
+      return result;
+    }
+  };
   return (
     <ScrollView>
-      {
-        post && <View style={styles.container}>
-        <View style={styles.header}>
-          <View style={styles.left}>
-            <Image
-              style={{
-                width: 30,
-                height: 30,
-                borderRadius: 15,
-                marginTop: 5,
-                marginRight: 5,
+      {post && (
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <View style={styles.left}>
+              <Image
+                style={{
+                  width: 30,
+                  height: 30,
+                  borderRadius: 15,
+                  marginTop: 5,
+                  marginRight: 5,
+                }}
+                source={{uri: URL_FILE + post.author.avatar.fileName}}
+              />
+              <View>
+                <Text style={{fontSize: 15, color: 'black'}}>
+                  {post.author.username}
+                </Text>
+                <Text>{showTime(post.createdAt)}</Text>
+              </View>
+            </View>
+          </View>
+          <View style={styles.content}>
+            <Text style={{color: 'black'}}>{post.described}</Text>
+          </View>
+          <View style={styles.media}>{showImage}</View>
+          <View style={styles.action}>
+            <AntDesign
+              name="hearto"
+              size={25}
+              onPress={() => {
+                // console.log("aa", isLike)
+                // setIsLike(!isLike);
+                props.likePost(props.token, post._id);
               }}
-              source={{uri: URL_FILE + post.author.avatar.fileName}}
+              color={post.isLike ? 'red' : 'black'}
             />
-            <View>
-              <Text style={{fontSize: 15, color: 'black'}}>
-                {post.author.username}
-              </Text>
-              <Text>{post.updatedAt}</Text>
+            <Text style={{marginLeft: 5, marginRight: 20, fontSize: 16}}>
+              {post.like.length}
+            </Text>
+            <FontAwesome name="commenting-o" size={25} />
+            <Text style={{marginLeft: 5, fontSize: 15}}>
+              {post.countComments}
+            </Text>
+          </View>
+          <View>
+            {showComment}
+            <View style={styles.inputcomment}>
+              <TextInput
+                placeholder="write comment"
+                style={{flex: 1}}
+                value={comment}
+                onChangeText={comment => {
+                  setComment(comment);
+                }}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  console.log('xxx');
+                  postComment(props.token, comment, post._id);
+                  toast.show('Comment successfully', {
+                    type: 'normal',
+                    placement: 'top',
+                    duration: 4000,
+                    offset: 30,
+                    animationType: 'slide-in',
+                  });
+                  setComment('');
+                }}>
+                <Feather name="send" size={30} style={{marginTop: 10}} />
+              </TouchableOpacity>
             </View>
           </View>
         </View>
-        <View style={styles.content}>
-          <Text style={{color: 'black'}}>{post.described}</Text>
-        </View>
-        <View style={styles.media}>{showImage}</View>
-        <View style={styles.action}>
-          <AntDesign
-            name="hearto"
-            size={25}
-            onPress={() => {
-              // console.log("aa", isLike)
-              // setIsLike(!isLike);
-              props.likePost(props.token, post._id);
-            }}
-            color={post.isLike ? 'red' : 'black'}
-          />
-          <Text style={{marginLeft: 5, marginRight: 20, fontSize: 16}}>
-            {post.like.length}
-          </Text>
-          <FontAwesome name="commenting-o" size={25} />
-          <Text style={{marginLeft: 5, fontSize: 15}}>
-            {post.countComments}
-          </Text>
-        </View>
-        <View>
-          {showComment}
-          <View style={styles.inputcomment}>
-            <TextInput
-              placeholder="write comment"
-              style={{flex: 1}}
-              value={comment}
-              onChangeText={comment => {
-                setComment(comment);
-              }}
-            />
-            <TouchableOpacity
-            onPress={() => {
-              console.log("xxx");
-              postComment(props.token, comment, post._id);
-              toast.show("Comment successfully", {
-                type: "normal",
-                placement: "top",
-                duration: 4000,
-                offset: 30,
-                animationType: "slide-in",
-              });
-              setComment('');
-            }}
-            ><Feather
-              name="send"
-              size={30}
-              style={{marginTop: 10}}
-            /></TouchableOpacity>
-          </View>
-        </View>
-      </View>
-      }
-      
+      )}
     </ScrollView>
   );
 };
@@ -223,7 +231,8 @@ const mapStateToProp = state => {
   };
 };
 const mapDispatchToProp = {
-  updateCountComment, likePost
+  updateCountComment,
+  likePost,
 };
 
 export default connect(mapStateToProp, mapDispatchToProp)(CommentScreen);

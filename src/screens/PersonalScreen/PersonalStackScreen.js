@@ -15,6 +15,7 @@ const PersonalStackScreen = () => {
       <PersonalStack.Screen
         name="Personal Setting"
         component={PersonalScreen}
+        options={{headerShown: false}}
       />
       <PersonalStack.Screen
         name="infoPersonal"

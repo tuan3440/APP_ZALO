@@ -15,42 +15,42 @@ import api from '../../api/index';
 
 const FriendRequestSingle = props => {
   const friend = props.friend;
-  const removeRequestFriend = async (user_id) => {
-    try {
-      const res = await api.post('friends/set-accept/',
-      {
-        user_id : user_id,
-        is_accept: 2
-      },
-      {
-        headers: {authorization: `Bearer ${props.token}`},
-      });
-      const newList = props.lists.filter(friend => {
-        return friend._id != user_id;
-      })
-      props.update(newList);
-    } catch (e) {
-      console.error('cm111', e.response);
-    }
-  }
-  const acceptRequestFriend = async (user_id) => {
-    try {
-      const res = await api.post('friends/set-accept/',
-      {
-        user_id : user_id,
-        is_accept: 1
-      },
-      {
-        headers: {authorization: `Bearer ${props.token}`},
-      });
-      const newList = props.lists.filter(friend => {
-        return friend._id != user_id;
-      })
-      props.update(newList);
-    } catch (e) {
-      console.error('cm111', e.response);
-    }
-  }
+  // const removeRequestFriend = async (user_id) => {
+  //   try {
+  //     const res = await api.post('friends/set-accept/',
+  //     {
+  //       user_id : user_id,
+  //       is_accept: 2
+  //     },
+  //     {
+  //       headers: {authorization: `Bearer ${props.token}`},
+  //     });
+  //     const newList = props.lists.filter(friend => {
+  //       return friend._id != user_id;
+  //     })
+  //     props.update(newList);
+  //   } catch (e) {
+  //     console.error('cm111', e.response);
+  //   }
+  // }
+  // const acceptRequestFriend = async (user_id) => {
+  //   try {
+  //     const res = await api.post('friends/set-accept/',
+  //     {
+  //       user_id : user_id,
+  //       is_accept: 1
+  //     },
+  //     {
+  //       headers: {authorization: `Bearer ${props.token}`},
+  //     });
+  //     const newList = props.lists.filter(friend => {
+  //       return friend._id != user_id;
+  //     })
+  //     props.update(newList);
+  //   } catch (e) {
+  //     console.error('cm111', e.response);
+  //   }
+  // }
   return (
     <View style={styles.container}>
       <Image
@@ -61,12 +61,12 @@ const FriendRequestSingle = props => {
       <Text style={{flex:1}}>{friend.username}</Text>
       <EvilIcons name="check" size={35}
       onPress={() => {
-        acceptRequestFriend(friend._id);
+        props.acceptRequestFriend(props.token, friend._id);
       }}
       />
       <EvilIcons name="close-o" size={35} style={{marginHorizontal:20}}
       onPress={() => {
-           removeRequestFriend(friend._id)
+           props.removeRequestFriend(props.token, friend._id)
       }}/>
     </View>
   );

@@ -7,50 +7,23 @@ const initialState = {
   username: '',
   avatar: '',
   cover_image: '',
+  blocked_inbox: [],
   token: "",
   error: '',
 };
 
-
-const removeTokenStorage = async () => {
-    try {
-       const n = await AsyncStorage.removeItem("token");
-       return n;
-    } catch(e) {
-       
-    }
-}
-
-const getTokenStorage = async () => {
-  try {
-    const a = await AsyncStorage.getIem("token");
-    console.log("token", a);
-    return a;
-  } catch(e) {
-     
-  }
-}
-
-const saveTokenStorage = async (token) => {
-  try {
-     const m = await AsyncStorage.setItem("token", token);
-     return m;
-  } catch(e) {
-     
-  }
-}
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionAuth.SIGNUP_SUCCESS:
-      saveTokenStorage(action.payload.token)
       return {
         ...state,
-        id: action.payload.data.id,
+        id: action.payload.data._id,
         phone: action.payload.data.phonenumber,
         token: action.payload.token,
         username: action.payload.data.username,
         avatar: action.payload.data.avatar,
         cover_image: action.payload.data.cover_image,
+        blocked_inbox: action.payload.data.blocked_inbox,
         error : ""
       };
     case actionAuth.SIGNUP_FAILURE:
@@ -59,13 +32,13 @@ const authReducer = (state = initialState, action) => {
         error: action.payload.message,
       };
     case actionAuth.LOGIN_SUCCESS:
-      saveTokenStorage(action.payload.token)
       return {
         ...state,
         id: action.payload.data.id,
         phone: action.payload.data.phonenumber,
         token: action.payload.token,
         username: action.payload.data.username,
+        blocked_inbox: action.payload.data.blocked_inbox,
         error : ""
       };
     case actionAuth.LOGIN_FAILURE:
@@ -84,11 +57,15 @@ const authReducer = (state = initialState, action) => {
         token : action.payload
       }
     case actionAuth.LOGOUT: 
-      removeTokenStorage();
       return {
         ...state,
         token : ""
       }
+    case actionAuth.BLOCK_INBOX: 
+       return {
+         ...state,
+         blocked_inbox : action.payload.data.blocked_inbox
+       }
     default:
       return state;
   }

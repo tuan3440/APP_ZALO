@@ -21,10 +21,13 @@ import {deletePost, likePost} from '../../redux/actions/post.action';
 
 const MainScreen = props => {
   useEffect(() => {
-    console.log("tokenxx", props.token)
     props.showUser(props.token);
   }, []);
-
+  useEffect(() => {
+    props.navigation.setOptions({
+        title: "Diary"
+      })
+}, [])
   useEffect(() => {
     props.getListPost(props.token);
   }, []);
@@ -33,7 +36,6 @@ const MainScreen = props => {
   };
   return (
     <>
-    <Search />
     <View>
       <View style={styles.create_post}>
         <Image

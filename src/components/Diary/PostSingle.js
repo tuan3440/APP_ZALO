@@ -19,12 +19,12 @@ import api from '../../api/index';
 import {useToast} from 'react-native-toast-notifications';
 import {connect} from 'react-redux';
 import {hiddenPost} from '../../redux/actions/post.action';
+import {convertTime} from '../../redux/constants/constants';
 
 const PostSingle = props => {
   const toast = useToast();
   const {navigation} = props;
   const postid = props.post._id;
-  console.log('www', postid);
   const [isModalPost, setIsModalPost] = useState(false);
   const [isModalReport, setIsModalReport] = useState(false);
   const [isModalReportDetail, setIsModalReportDetail] = useState(false);
@@ -37,8 +37,6 @@ const PostSingle = props => {
         const res = await api.get('posts/show/' + postid, {
           headers: {authorization: `Bearer ${props.token}`},
         });
-        console.log('xax', res.data.data);
-        console.log('phoone', props.phonenumber);
         setPost(res.data.data);
       } catch (e) {
         console.error('post', e);
@@ -79,6 +77,17 @@ const PostSingle = props => {
     }
   };
 
+  const showTime = (time) => {
+      if (time) {
+         let d = new Date(time);
+         let dateCurrent = new Date();
+
+         let seconds = dateCurrent.getTime() - d.getTime();
+         let result = convertTime(seconds/1000);
+         return result;
+      }
+  }
+
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate('Comment', {postId: post._id})}>
@@ -99,7 +108,7 @@ const PostSingle = props => {
               <Text style={{fontSize: 15, color: 'black'}}>
                 {post?.author?.username}
               </Text>
-              <Text>{post?.updatedAt}</Text>
+              <Text>{showTime(post?.createdAt)}</Text>
             </View>
           </View>
 

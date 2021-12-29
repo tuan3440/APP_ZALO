@@ -5,7 +5,7 @@ import {
   TextInput,
   StyleSheet,
   PermissionsAndroid,
-  Image
+  Image,
 } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
@@ -21,31 +21,43 @@ import {
 } from 'react-native-image-picker';
 import {createPost} from '../../redux/actions/post.action';
 import {connect} from 'react-redux';
-
+import RNFS from 'react-native-fs';
 
 const CreatePostScreen = props => {
-  const [images, setImages] = useState([]);
-  const [description, setDescription] = useState("");
+  const [images, setImages] = useState(null);
+  const [imagelist, setImagelist] = useState(null);
+  const [description, setDescription] = useState('');
   const [videos, setVideos] = useState([]);
 
-  // const createFormData = (images, videos, description) => {
-  //   console.log("image", images);
-    // const data = new FormData();
+  const createFormData = (images, videos, description) => {
+    console.log('image', images);
+    const data = new FormData();
     // if (images != null) {
     //   data.append('images', {
     //     name: images.fileName,
     //     type: images.type,
-    //     uri: Platform.OS === 'ios' ? images.uri.replace('file://', '') : images.uri,
-    //     size : images.fileSize    
+    //     uri:
+    //       Platform.OS === 'ios'
+    //         ? images.uri.replace('file://', '')
+    //         : images.uri,
+    //     size: images.fileSize,
     //   });
     // }
-    // data.append('described', description);
-  //   // Object.keys(body).forEach(key => {
-  //   //   data.append(key, body[key]);
-  //   // });
-  //   console.log(data);
-  //   return data;
-  // };
+    RNFS.readFile(images.uri, 'base64').then(res => {
+      // console.log("xx", res)
+      data.append('images', res);
+    }).catch(err => {
+      console.log('b', err);
+    
+    });;
+    data.append('described', description);
+
+    // // Object.keys(body).forEach(key => {
+    // //   data.append(key, body[key]);
+    // // });
+    // console.log("data",data);
+    return data;
+  };
   const cameraLaunch = async () => {
     const grantedcamera = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.CAMERA,
@@ -74,31 +86,31 @@ const CreatePostScreen = props => {
       let options = {
         storageOptions: {
           skipBackup: true,
-  
+
           path: 'images',
         },
+        base64: true
       };
-  
+
       launchCamera(options, res => {
         console.log('Response = ', res);
-  
         if (res.didCancel) {
           console.log('User cancelled image picker');
         } else if (res.error) {
           console.log('ImagePicker Error: ', res.error);
         } else if (res.customButton) {
           console.log('User tapped custom button: ', res.customButton);
-  
+
           alert(res.customButton);
         } else {
           const source = {uri: res.uri};
-  
-          console.log('response', JSON.stringify(res));
+          
+          console.log('response', res);
         }
       });
     }
   };
-  
+
   const mageGalleryLaunch = async type => {
     const grantedcamera = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.CAMERA,
@@ -128,7 +140,7 @@ const CreatePostScreen = props => {
         storageOptions: {
           skipBackup: true,
           path: 'images',
-        },
+        }
       };
       if (type == 'video') {
         options.mediaType = 'video';
@@ -140,21 +152,19 @@ const CreatePostScreen = props => {
       //     path: 'images',
       //   },
       // };
-  
+
       launchImageLibrary(options, res => {
-        console.log('Response = ', res);
-  
         if (res.didCancel) {
           console.log('User cancelled image picker');
         } else if (res.error) {
           console.log('ImagePicker Error: ', res.error);
         } else if (res.customButton) {
           console.log('User tapped custom button: ', res.customButton);
-  
+
           alert(res.customButton);
         } else {
           const source = {uri: res.uri};
-          console.log('response', res.assets[0]);
+          console.log('responsexxxx', res);
           // setPhotos(res.uri);
           // images.push(res.assets[0]);
           setImages(res.assets[0]);
@@ -164,7 +174,7 @@ const CreatePostScreen = props => {
       });
     }
   };
-  
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -173,7 +183,7 @@ const CreatePostScreen = props => {
         multiline={true}
         numberOfLines={10}
         value={description}
-        onChangeText={(description) => setDescription(description)}
+        onChangeText={description => setDescription(description)}
       />
       <View style={styles.insert}>
         <View style={styles.icon}>
@@ -195,11 +205,15 @@ const CreatePostScreen = props => {
             onPress={() => mageGalleryLaunch('video')}
           />
         </View>
-        <Text style={styles.post} onPress={() => {
-          // const data = createFormData(images, videos, description);
-          // console.log("aa", data._parts);
-          props.createPost(props.token, images, videos, description);
-          }}>Post</Text>
+        <Text
+          style={styles.post}
+          onPress={() => {
+            const data = createFormData(images, videos, description);
+            // console.log("aa", data._parts);
+            props.createPost(props.token, data);
+          }}>
+          Post
+        </Text>
       </View>
     </View>
   );
@@ -246,7 +260,6 @@ const mapStateToProp = state => {
 };
 
 const mapDispatchToProp = {
-  createPost
+  createPost,
 };
 export default connect(mapStateToProp, mapDispatchToProp)(CreatePostScreen);
-
