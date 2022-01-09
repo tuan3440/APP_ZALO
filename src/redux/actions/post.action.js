@@ -27,7 +27,6 @@ export const getListPost = token => async dispatch => {
 //create post
 export const createPost =
   (token, data) => async dispatch => {
-    console.log("xex", data);
     try {
       await api
         .post('posts/create', data, {
@@ -37,10 +36,10 @@ export const createPost =
         })
         .then(res => {
           console.log('a', res.data);
-          //  dispatch({
-          //      type: actionAuth.SHOW_USER,
-          //      payload: res.data,
-          //    })
+           dispatch({
+               type: actionPost.CREATE_POST,
+               payload: res.data,
+             })
         })
         .catch(err => {
           console.log('b', err);
@@ -53,6 +52,37 @@ export const createPost =
       console.log('xx', error.message);
     }
   };
+
+  //edit post
+export const editPost =
+(token, data, postId) => async dispatch => {
+  console.log(data);
+  try {
+    await api
+      .post('posts/edit/' + postId, data, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      })
+      .then(res => {
+        console.log('a', res.data);
+         dispatch({
+             type: actionPost.EDIT_POST,
+             payload: res.data,
+           })
+      })
+      .catch(err => {
+        console.log('b', err);
+        //  dispatch({
+        //      type: actionAuth.GET_ERROR,
+        //      payload: err.response.data,
+        //    })
+      });
+  } catch (error) {
+    console.log('xx', error.message);
+  }
+};
+
 //delete post
 export const deletePost = (token, id) => async dispatch => {
   try {

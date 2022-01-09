@@ -2,6 +2,7 @@ export const BASE_URL = 'localhost:8000/';
 
 export const actionPost = {
     GET_POSTS : 'GET_POSTS',
+    EDIT_POST : 'EDIT_POST',
     CREATE_POST : 'CREATE_POST',
     DELETE_POST : 'DELETE_POST',
     ACTION_POST : 'ACTION_POST',

@@ -115,7 +115,10 @@ const PostSingle = props => {
           <Entypo
             name="dots-three-horizontal"
             size={30}
-            onPress={() => setIsModalPost(!isModalPost)}
+            onPress={() => {
+              console.log("xxxx");
+              setIsModalPost(true)
+            }}
           />
         </View>
         <View style={styles.content}>
@@ -164,15 +167,10 @@ const PostSingle = props => {
                         color: 'black',
                       }}
                       onPress={() => {
-                        console.log('id', post._id);
-                        props.deletePost(props.token, post._id);
-                        toast.show('Delete post successfully', {
-                          type: 'normal',
-                          placement: 'top',
-                          duration: 4000,
-                          offset: 30,
-                          animationType: 'slide-in',
-                        });
+                        setIsModalPost(false);
+                        navigation.navigate("EditPost", {
+                          post : post
+                        })
                       }}>
                       Edit Post
                     </Text>
@@ -184,7 +182,6 @@ const PostSingle = props => {
                         color: 'black',
                       }}
                       onPress={() => {
-                        console.log('id', post._id);
                         props.deletePost(props.token, post._id);
                         toast.show('Delete post successfully', {
                           type: 'normal',
@@ -431,6 +428,7 @@ const mapStateToProp = state => {
     id: state.auth.id,
     phonenumber: state.auth.phone,
     posts: state.post.posts,
+
   };
 };
 const mapDispatchToProp = {

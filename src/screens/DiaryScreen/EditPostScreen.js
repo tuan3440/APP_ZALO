@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect} from 'react';
+import React, {useState, useLayoutEffect, useEffect} from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   StyleSheet,
   PermissionsAndroid,
   Image,
+  ScrollView,
 } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Feather from 'react-native-vector-icons/Feather';
@@ -19,32 +20,41 @@ import {
   launchCamera,
   launchImageLibrary,
 } from 'react-native-image-picker';
-import {createPost} from '../../redux/actions/post.action';
+import {editPost} from '../../redux/actions/post.action';
 import {connect} from 'react-redux';
 import RNFS from 'react-native-fs';
+import api from '../../api/index';
+import {URL_FILE} from '../../redux/constants/constants';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
+const EditPostScreen = props => {
+  const [post, setPost] = useState(props.route.params.post);
+  const [images, setImages] = useState(post.images);
+  const [description, setDescription] = useState(post.described);
+  const [videos, setVideos] = useState(post.videos);
+  useEffect(() => {
+    console.log('ima', images);
 
-const CreatePostScreen = props => {
-  const [images, setImages] = useState(null);
-  const [imagelist, setImagelist] = useState(null);
-  const [description, setDescription] = useState('');
-  const [videos, setVideos] = useState([]);
-
+  }, [images])
   const createFormData = (images, videos, description) => {
     console.log('image', images);
     const data = new FormData();
     if (images != null) {
       images.forEach(image => {
-        data.append('images', {
-          name: image.fileName,
-          type: image.type,
-          uri:
-            Platform.OS === 'ios'
-              ? image.uri.replace('file://', '')
-              : image.uri,
-          size: image.fileSize,
-        });
+        if (image.uri) {
+          data.append('images', {
+            name: image.fileName,
+            type: image.type,
+            uri:
+              Platform.OS === 'ios'
+                ? image.uri.replace('file://', '')
+                : image.uri,
+            size: image.fileSize,
+          });
+        } else {
+          data.append('oldImage', image._id)
+        }
+        
       })
     }
     data.append('described', description);
@@ -160,15 +170,11 @@ const CreatePostScreen = props => {
 
           alert(res.customButton);
         } else {
-          // const source = {uri: res.uri};
+          const source = {uri: res.uri};
           console.log('responsexxxx', res);
           // setPhotos(res.uri);
           // images.push(res.assets[0]);
-          if (images) {
-            setImages([...images, res.assets[0]]);
-          } else {
-            setImages([res.assets[0]]);
-          }
+          setImages([...images, res.assets[0]]);
           // console.log("image", images);
           // console.log('response', res.assets[0].uri);
         }
@@ -176,36 +182,53 @@ const CreatePostScreen = props => {
     }
   };
 
-  const removeImage = uri => {
-    let newImage = images.filter(x => {
-      return x.uri != uri;
-    });
-    setImages(newImage);
-  };
+  const removeImage = (id) => {
+      let newImage = images.filter(x => {
+        if (x._id) return x._id != id;
+        else return x.uri != id;
+      });
+      setImages(newImage);
+  }
 
   const showImage = images?.map?.((image, index) => {
-    console.log("image", image)
-    return (
-      <View style={{width: 120}}>
-        <Image
-          source={{uri: image.uri}}
-          style={{
-            width: 100,
-            height: 100,
-            marginRight: 5,
-            marginBottom: 10,
-          }}
-          key={index}
-        />
-        <MaterialIcons
-          name="cancel"
-          size={20}
-          onPress={() => {
-            removeImage(image.uri);
-          }}
-        />
-      </View>
-    );
+    if (image.uri) {
+        return (
+          <View style={{width: 120}}>
+            <Image
+              source={{uri: image.uri}}
+              style={{
+                width: 100,
+                height: 100,
+                marginRight: 5,
+                marginBottom: 10,
+              }}
+              key={index}
+            />
+            <MaterialIcons name="cancel" size={20} onPress={() => {
+               removeImage(image.uri)
+            }}/>
+          </View>
+        );
+    } else {
+      return (
+        <View style={{width: 120}}>
+          <Image
+            source={{uri: URL_FILE + image.fileName}}
+            style={{
+              width: 100,
+              height: 100,
+              marginRight: 5,
+              marginBottom: 10,
+            }}
+            key={index}
+          />
+          <MaterialIcons name="cancel" size={20} onPress={() => {
+             removeImage(image._id)
+          }}/>
+        </View>
+      );
+    }
+    
   });
 
   return (
@@ -214,7 +237,7 @@ const CreatePostScreen = props => {
         style={styles.input}
         placeholder="write post"
         multiline={true}
-        numberOfLines={10}
+        numberOfLines={5}
         value={description}
         onChangeText={description => setDescription(description)}
       />
@@ -245,10 +268,10 @@ const CreatePostScreen = props => {
           onPress={() => {
             const data = createFormData(images, videos, description);
             // console.log("aa", data._parts);
-            props.createPost(props.token, data);
+            props.editPost(props.token, data, post._id);
             props.navigation.navigate('main');
           }}>
-          Post
+          Edit
         </Text>
       </View>
     </View>
@@ -264,7 +287,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   input: {
-    flex: 9,
+    flex: 7,
     borderWidth: 1,
     textAlignVertical: 'top',
     fontSize: 15,
@@ -300,6 +323,6 @@ const mapStateToProp = state => {
 };
 
 const mapDispatchToProp = {
-  createPost,
+  editPost,
 };
-export default connect(mapStateToProp, mapDispatchToProp)(CreatePostScreen);
+export default connect(mapStateToProp, mapDispatchToProp)(EditPostScreen);
