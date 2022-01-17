@@ -35,7 +35,7 @@ export const actionFriend = {
     SEND_REQUEST : 'SEND_REQUEST'
 }
 
-export const URL_FILE = "http://192.168.122.1:8000/files/";
+export const URL_FILE = "http://192.168.0.103:8000/files/";
 
 export function convertTime(secs) {
     if (secs > 604800) {

@@ -7,6 +7,7 @@ export const showUser = (token) => async dispatch => {
     try {
        await api.get("users/show", { headers: {"authorization" : `Bearer ${token}`}}).then(res =>
         {
+          console.log("user", res.data)
             dispatch({
                 type: actionAuth.SHOW_USER,
                 payload: res.data,

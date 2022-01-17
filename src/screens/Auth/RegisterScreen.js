@@ -9,17 +9,35 @@ import {
 } from 'react-native';
 import { getUniqueId, getManufacturer } from 'react-native-device-info';
 import {register} from '../../redux/actions/auth.action';
+import {useToast} from 'react-native-toast-notifications';
 
 const RegisterScreen = (props) => {
-  const [username, setUsername] = useState("");
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  // useEffect(() => {
-  //   if (props.token) {
-  //     props.navigation.navigate('Zalo');
-  //   }
-  // }, [props.token]);
+  const toast = useToast();
+  const [username, setUsername] = useState(null);
+  const [phone, setPhone] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [errPhone, setErrPhone] = useState(false);
+  const [errPass, setErrPass] = useState(false);
+  
+  const validatePhone = (phone) => {
+    if (phone.length <9 || phone.length >11) {
+      setErrPhone("Phone is invalide");
+      setPhone(phone);
+    } else {
+      setErrPhone(false);
+      setPhone(phone);
+    }
+  }
 
+  const validatePass = (pass) => {
+    if(pass.length < 6) {
+      setErrPass("Password should be min 6 char");
+      setPassword(pass);
+    } else {
+      setErrPass(false);
+      setPassword(pass);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -31,14 +49,27 @@ const RegisterScreen = (props) => {
         </View>
         <View style={styles.input}>
           <Text>Enter Your phone</Text>
-          <TextInput style={styles.text} value={phone} onChangeText={phone => setPhone(phone)}/>
+          <TextInput keyboardType="numeric" style={styles.text} value={phone} onChangeText={phone => validatePhone(phone)}/>
+          {errPhone && <Text style={{color: 'red'}}>{errPhone}</Text>}
         </View>
         <View style={styles.input}>
           <Text>Enter password</Text>
-          <TextInput style={styles.text} value={password} secureTextEntry={true} onChangeText={pass => setPassword(pass)}/>
+          <TextInput style={styles.text} value={password} secureTextEntry={true} onChangeText={pass => validatePass(pass)}/>
+          {errPass && <Text style={{color: 'red'}}>{errPass}</Text>}
         </View>
       </View>
-      <TouchableOpacity style={styles.register} onPress={() => {props.register(username, phone, password)}}>
+      <TouchableOpacity style={styles.register} onPress={() => {
+        if (!errPhone && !errPass && username && phone && password) {
+          props.register(username, phone, password)
+          toast.show('Resgister successfully', {
+            type: 'normal',
+            placement: 'top',
+            duration: 4000,
+            offset: 30,
+            animationType: 'slide-in',
+          });
+        }
+        }}>
         <Text style={styles.textregister}>Register</Text>
       </TouchableOpacity>
     </View>

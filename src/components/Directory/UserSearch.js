@@ -72,8 +72,8 @@ const UserSearch = props => {
       }}/>
       <Text style={{flex:1}}>{friend.username}</Text>
       {isRequest &&  <View style={{marginHorizontal: 10}}><Button title="Accept"/></View>}
-      {isFriend && <Text style={{marginHorizontal: 10}}>Friend</Text>}
-      {isRequested && <Text style={{marginHorizontal: 10}}>you have sent request friend</Text>}
+      {isFriend && <Text style={{marginHorizontal: 10, backgroundColor: 'lightblue', paddingTop: 5, paddingHorizontal:5}}>Friend</Text>}
+      {isRequested && <Text style={{marginHorizontal: 10, backgroundColor: 'lightblue', paddingTop: 5, paddingHorizontal:5}}>you have sent request friend</Text>}
       {isStranger && <View style={{marginHorizontal: 10}}><Button title="Add" onPress={() => props.sendRequestFriend(props.token, friend._id)}/></View>}
     </View>
     </TouchableOpacity>

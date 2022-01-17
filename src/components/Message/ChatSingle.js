@@ -11,7 +11,8 @@ const ChatSingle = (props) => {
              navigation.navigate("MessageS", {
                  chatId: chatId,
                  username: friend.username,
-                 userId : friend._id
+                 userId : friend._id,
+                 blocked_inbox: friend.blocked_inbox
              })
         }}
             >

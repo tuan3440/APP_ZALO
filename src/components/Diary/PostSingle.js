@@ -20,6 +20,7 @@ import {useToast} from 'react-native-toast-notifications';
 import {connect} from 'react-redux';
 import {hiddenPost} from '../../redux/actions/post.action';
 import {convertTime} from '../../redux/constants/constants';
+import Video from 'react-native-video';
 
 const PostSingle = props => {
   const toast = useToast();
@@ -56,6 +57,24 @@ const PostSingle = props => {
           marginBottom: 10,
         }}
         key={index}
+      />
+    );
+  });
+
+  const showVideo = post?.videos?.map?.((video, index) => {
+    console.log("vidoe", video);
+    return (
+      <Video
+        source={{uri: URL_FILE + video.fileName}}
+        style={{
+          width: 200,
+          height: 100,
+          marginVertical: 20,
+          marginLeft: 100
+        }}
+        key={index}
+        repeat={true}
+        paused={false}
       />
     );
   });
@@ -125,6 +144,7 @@ const PostSingle = props => {
           <Text style={{color: 'black'}}>{post?.described}</Text>
         </View>
         <View style={styles.media}>{showImage}</View>
+        <View>{showVideo}</View>
         <View style={styles.action}>
           <AntDesign
             name="hearto"
@@ -204,6 +224,7 @@ const PostSingle = props => {
                         fontSize: 15,
                         paddingVertical: 15,
                         color: 'black',
+                        borderBottomWidth: 1
                       }}>
                       Hidden post
                     </Text>

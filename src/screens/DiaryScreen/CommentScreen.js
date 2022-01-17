@@ -24,6 +24,7 @@ import api from '../../api/index';
 import {updateCountComment, likePost} from '../../redux/actions/post.action';
 import {useToast} from 'react-native-toast-notifications';
 import {convertTime} from '../../redux/constants/constants';
+import Video from 'react-native-video';
 
 
 const CommentScreen = props => {
@@ -55,6 +56,23 @@ const CommentScreen = props => {
           marginBottom: 10,
         }}
         key={index}
+      />
+    );
+  });
+  const showVideo = post?.videos?.map?.((video, index) => {
+    console.log("vidoe", video);
+    return (
+      <Video
+        source={{uri: URL_FILE + video.fileName}}
+        style={{
+          width: 200,
+          height: 100,
+          marginVertical: 20,
+          marginLeft: 100
+        }}
+        key={index}
+        repeat={true}
+        paused={false}
       />
     );
   });
@@ -139,6 +157,7 @@ const CommentScreen = props => {
             <Text style={{color: 'black'}}>{post.described}</Text>
           </View>
           <View style={styles.media}>{showImage}</View>
+          <View >{showVideo}</View>
           <View style={styles.action}>
             <AntDesign
               name="hearto"

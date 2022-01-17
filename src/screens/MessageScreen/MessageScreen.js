@@ -17,7 +17,13 @@ const MessageScreen = (props) => {
     }, [])
     const chatId = props.route.params.chatId;
     const userId = props.route.params.userId;
+    const blocked_inbox = props.route.params.blocked_inbox;
     const blocked = props.blocked_inbox.includes(userId);
+    let isBlock = false;
+    if (blocked_inbox) {
+      isBlock = blocked_inbox.includes(props.id);
+    }
+
     useEffect(() => {
         async function getMessage(chatId) {
             try {
@@ -53,7 +59,7 @@ const MessageScreen = (props) => {
     // }, []);
 
     useEffect(() => {
-      socketRef.current = socketIOClient.connect("http://192.168.122.1:3000")
+      socketRef.current = socketIOClient.connect("http://192.168.0.103:3000")
     
       // socketRef.current.on('getId', data => {
       //   setId(data)
@@ -78,8 +84,8 @@ const MessageScreen = (props) => {
             />
             </View>
             <View style={styles.create}>
-                <TextInput style={{flex: 1}} placeholder={blocked ? "You are blocked or blocked" : "Message"} onChangeText={value => setContent(value)} value={content} 
-                editable={blocked ? false : true}
+                <TextInput style={{flex: 1}} placeholder={(blocked || isBlock) ? "You are blocked or blocked" : "Message"} onChangeText={value => setContent(value)} value={content} 
+                editable={(blocked || isBlock) ? false : true}
                 />
                 <Feather name="mic" size={30} style={{marginHorizontal: 15}}/>
                 <FontAwesome name="photo" size={30} style={{marginHorizontal: 15}}/>

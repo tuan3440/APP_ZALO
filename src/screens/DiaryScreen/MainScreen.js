@@ -28,9 +28,12 @@ const MainScreen = props => {
         title: "Diary"
       })
 }, [])
+
+
   useEffect(() => {
     props.getListPost(props.token);
   }, []);
+
   const renderItem = ({item}) => {
     return <PostSingle post={item} key={item._id} deletePost={props.deletePost} likePost={props.likePost} token={props.token} navigation={props.navigation}/>;
   };

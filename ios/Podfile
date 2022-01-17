@@ -25,6 +25,8 @@ target 'zalo_app' do
 
   pod 'RNFS', :path => '../node_modules/react-native-fs'
 
+  pod 'react-native-video', :path => '../node_modules/react-native-video'
+
   target 'zalo_appTests' do
     inherit! :complete
     # Pods for testing

@@ -44,6 +44,11 @@ const SearchScreen = props => {
         return user._id != props.id
       })
       setResult(result);
+      // console.log("id", props.id)
+      // setTimeout(() => {
+      //   console.log("rsr", result);
+      // }, 1000)
+      
     } catch (e) {
       console.error('cm111', e.response);
     }

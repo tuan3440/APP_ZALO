@@ -17,7 +17,7 @@ const authReducer = (state = initialState, action) => {
     case actionAuth.SIGNUP_SUCCESS:
       return {
         ...state,
-        id: action.payload.data._id,
+        id: action.payload.data.id,
         phone: action.payload.data.phonenumber,
         token: action.payload.token,
         username: action.payload.data.username,
